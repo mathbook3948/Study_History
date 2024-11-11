@@ -35,7 +35,18 @@ private ExampleClass testClass;
 ```
 - 이 경우 `testClass`로 이름을 설정 했고, `ExampleClass`의 Bean 명을 따로 지정해주지 않아서 기본 이름을 찾으려 했으나, 같은 이름이 없어서 ByType으로 찾아서 DI 한다.
 #### 의존성 주입의 원리
+### Spring MVC
+- Spring MVC는 Spring Model-View-Controller의 약자로, 기능별로 코드를 분리시켜서 유지보수를 용이하게 할 수있게 하는 목적으로 사용된다.
+#### 개념
+1. 외부에서 요청이 들어옴
+2. DispatcherServlet이 HandlerMapping을 통해 일치하는 Controller를 찾아 반환
+3. 해당 Controller에게 처리를 요청
+4. Controller에서 비즈니스 로직을 처리한 후 ModelAndView 반환
+5. DispatcherServlet에서 ModelAndView를 분석하고 해당 View 정보를 ViewResolver에게 넘김
+6. ViewResolver는 View 정보를 받아 View를 DispatcherServlet에게 전달
+7. DispatcherServlet이 View를 렌더링 후 Response로 클라이언트에게 보냄
 
+//TODO
 ## Annotation(어노테이션)
 ### DI  관련
 - `@Autowired` : Spring이 관리하는 Bean을 자동으로 주입한다. ByType을 기본으로 DI를 진행한다.
