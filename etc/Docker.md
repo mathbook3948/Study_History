@@ -12,3 +12,46 @@
 ```bash
 sudo apt install docker.io
 ```
+## Docker 실행
+```bash
+sudo systemctl start docker #시작
+sudo systemctl restart docker #재시작
+```
+## Image
+### Image 추가
+```bash
+docker pull ImageName
+```
+- ImageName에 다운 받고싶은 Image의 이름을 넣으면 된다.
+### Image 확인
+```bash
+docker images
+```
+## Container
+### Container 추가
+```bash
+docker container create [--name="ContainerName"] ImageName
+```
+- ImageName에 원하는 Image를 명시하면 된다.
+- Container의 이름은 기본적으로 Image의 이름으로 설정되지만, `--name=` 속성을 주어 원하는 이름을 줄 수도 있다.
+### Container 삭제
+```bash
+docker container rm ContainerName
+```
+### Container 확인
+```bash
+docker ps -a #모든 Container 확인
+docker ps #실행된 Container만 확인
+```
+### Container 실행, 정지
+```bash
+docker start ContainerName # 시작
+docker stop ContainerName #정지
+```
+### Container 추가 및 실행
+```bash
+docker run [--name=ContainerName] [옵션] ImageName
+```
+#### Container 실행 옵션
+- `-p LocalPort:ContainerPort` : 로컬 시스템(Docker가 실행되는 컴퓨터)의 특정 포트를 컨테이너의 포트로 연결한다.
+- `-d` : 컨테이너를 백그라운드에서 실행한다
