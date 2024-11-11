@@ -74,7 +74,9 @@ var result = EntityNameRepository.findAll();
 ```
 - 모든 행을 가져와서 List 형태로 result 변수에 저장한다
 ## JpaRepository 메서드
+### 입력
 - `.save(EntityName entity)` : 엔티티를 저장하거나 업데이트 한다.
+### 출력
 - `.findById(Long/int... id)` : 매개변수에 입력된 id를 바탕으로 엔티티 1개를 찾아 반환한다
 - `.findAll()` : 모든 엔티티를 조회하고 List 형태로 반환한다
 - `.deleteById(Long/int... id)` : 매개변수에 입력된 id를 바탕으로 엔티티를 찾아 삭제한다.
