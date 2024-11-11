@@ -15,9 +15,7 @@
 - [JPA in Spring Boot.md](./JPA%20in%20Spring%20Boot.md): Spring Boot에서 JPA를 사용하는 방법과 예제를 다룬 문서입니다.
 
 #### Mybatis
-- [Mybatis in Spring Boot.md](./Mybatis%20in%20Spring%20Boot.md): Spring Boot에서 Mybatis를 활용하는 방법에 대한 내용을 정리한 문서입니다.
+- [Mybatis in Spring Boot.md](./S): Spring Boot에서 Mybatis를 활용하는 방법에 대한 내용을 정리한 문서입니다.
 
 ## 기여 및 피드백
-이 프로젝트에 대한 피드백이나 기여는 언제든지 환영합니다! 함께 공부하고 성장해 나가요.
-
-감사합니다!
+이 프로젝트에 대한 피드백이나 기여는 언제든지 환영합니다! 함께 공부하고 성장해 나갑시다!
