@@ -78,3 +78,10 @@ $$
 - `.cast(tensor, dtype=)` : tensor 변수와 dtype을 받아 원하는 타입의 tensor로 변환할 수 있다
 - `.numpy()` : tensor 변수를 numpy 배열로 변환해서 반환한다
 - `.assign(data)` : 선택된 Variable 변수의 값을 data로 바꾼다.
+## Keras
+- Tensorflow 내에 포함된 라이브러리로, 신경망 모델을 쉽게 만들 수 있게 도와준다.
+### Keras를 이용하여 모델 만들기
+1. 모델의 신경망 레이어 만들기
+2. Optimizer, 손실함수 정하기
+3. 학습하기
+#### 1. 모델의 신경망 레이어 만들기
