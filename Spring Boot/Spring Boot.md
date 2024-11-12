@@ -5,6 +5,8 @@
 #### 생성 방법
 - `@Service`, `@RestController`등의 어노테이션을 사용하여 Bean을 생성한다.
 
+### IoC(Inversion of Control)
+
 ### 의존성 주입(Dependency Injection)
 - 한 클래스에서 다른 클래스를 참조하려 할 때 자동으로 의존성을 주입해주는 것이다.
 
@@ -45,16 +47,22 @@ private ExampleClass testClass;
 - Spring MVC는 Spring Model-View-Controller의 약자로, 기능별로 코드를 분리시켜서 유지보수를 용이하게 할 수있게 하는 목적으로 사용된다.
 #### 개념
 ##### Model
+- 데이터 관리 및 비즈니스 로직을 처리하는 부분이다. 
+- DAO, DTO, Service 클래스 등이 포함 된다.
+##### View
+- 비즈니스 로직을 처리 한 후 유저 인터페이스, 또는 데이터를 전송하는 구간이다.
+- HTML, JSP, JSON, XML 등이 포함된다
+##### Controller
+- 사용자의 요청을 받아 Model, View 등을 중개하는 곳이다
 
 #### 흐름
-1. 외부에서 요청이 들어옴
+1. 클라이언트 측에서 서버 측으로 요청을 보낸다(Get, Post, Put...등)
 2. DispatcherServlet이 HandlerMapping을 통해 일치하는 Controller를 찾아 반환
 3. 해당 Controller에게 처리를 요청
-4. Controller에서 비즈니스 로직을 처리한 후 ModelAndView 반환
+4. Controller에서 비즈니스 로직을 처리한 후 View의 이름과 Model 데이터를 가진 ModelAndView 객체를 반환
 5. DispatcherServlet에서 ModelAndView를 분석하고 해당 View 정보를 ViewResolver에게 넘김
-6. ViewResolver는 View 정보를 받아 View를 DispatcherServlet에게 전달
-7. DispatcherServlet이 View를 렌더링 후 Response로 클라이언트에게 보냄
-//TODO
+6. ViewResolver는 View 정보를 받아 View를 찾고, DispatcherServlet에게 전달
+7. DispatcherServlet이 View를 Model 데이터와 결합하여 HTML, JSP, JSON 등으로 렌더링 후 결과를  클라이언트에게 반환함
 
 ## Annotation(어노테이션)
 ### DI  관련
