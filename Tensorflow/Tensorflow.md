@@ -47,6 +47,11 @@ $$
 - Learning Rate를 가변적으로 상황에 맞게 변경해 주는 알고리즘을 뜻한다. 
 ### 과적합(Overfitting)
 - 반복적으로 같거나 비슷한 데이터만 훈련시키면 그 데이터에 익숙해져서 답을 외워버리는 현상을 말한다.
+### 데이터 전처리
+- 데이터 중간에 값이 없는 등 학습에 영향을 주는 요소들을 제거, 또는 학습이 더 잘 이루어지도록 데이터를 미리 처리 해두는 것을 말한다.
+### 파라미터 튜닝
+- 모델의 성능을 최적화 하기 위하여 Learning Rate, epochs, 등 조절 가능한 값을 조절 하는 것이다. 또한, 확률을 예측하는 모델의 경우 학습데이터를 0~1로 조절(적절한 값을 나누는 등)하는 방법이 있다
+
 # 함수, 알고리즘들
 ## Learning Rate Optimizer
 ### Momentum
@@ -58,6 +63,16 @@ $$
 //TODO
 ### Adam
 - 가장 자주 쓰인다(왜그런지 //TODO)
+## Loss Function(손실 함수)
+### binary_crossentropy
+//TODO
+## Activation Function(활성화 함수)
+### Sigmoid(시그모이드)
+- 0~1 사이로 값을 만들어준다. (0, 0.5)에서 만나며, 이후 x가 증가할 때 1에 가까워지고, x가 감소할 때 0에 가까워진다.
+- 0과 1 사이로 추려지기에 확률 문제에 적합하다.
+### ReLU(Rectified Linear Unit, 경사 함수) 
+- 음수는 0으로 처리하고 x가 0일때부터는 기울기가 1인 일차함수로 표현된다.
+<!-- ------------------------------------------------- -->
 # Tensorflow 메인
 - 일반적으로 `import tensorflow as tf`로 짧게 바꿔서 불러온다
 ## tensor 자료형
@@ -81,7 +96,73 @@ $$
 ## Keras
 - Tensorflow 내에 포함된 라이브러리로, 신경망 모델을 쉽게 만들 수 있게 도와준다.
 ### Keras를 이용하여 모델 만들기
+0. 데이터 전처리 하기
 1. 모델의 신경망 레이어 만들기
 2. Optimizer, 손실함수 정하기
 3. 학습하기
-#### 1. 모델의 신경망 레이어 만들기
+4. 모델을 이용한 예측하기
+#### 데이터 전처리 하기
+- 먼저 데이터 사이에 빈 값이나 `null` 이 있는지 확인하고 제거하거나 평균값 등을 넣어준다(`.fillna()`, `.dropna()` 등을 사용할 수 있다)
+- 데이터 준비가 끝나면, numpy 배열로 데이터를 준비시킨다.
+#### 모델의 신경망 레이어 만들기
+- `tf.keras.models.Sequential([])` 등을 사용하여 신경망의 틀을 정의하고 내부에 레이어들을 채워 넣는다
+```python
+model = tf.keras.models.Sequential([ #변수에 모델을 저장해 놓는다
+    tf.keras.layers.Dense(node_num1, activation="activation1"),
+    tf.keras.layers.Dense(node_num2, activation="activation2"),
+    ....
+])
+```
+- 첫 레이어에는 `input_shape` 속성을 주는 것이 좋다. 입력되는 데이터의 형태를 입력 받는다.
+- 마지막 레이어의 노드의 갯수는 원하는 결과의 갯수와 같게 해야 한다.
+##### 레이어 목록
+- `tf.keras.layers.Dense(노드갯수, activation=)` : 기본적인 계산을 수행하는 노드들을 가지고 있는 레이어이다.
+#### Optimizer, 손실함수 정하기
+```python
+model.compile(optimizer=, loss=, metrios=)
+```
+- Learning Rate Optimizer, Loss Function 를 적절히 찾아 넣으면 된다. 어떤 학습을 시킬지에 따라 종류를 잘 선택해야 한다
+##### metrios
+- 'accuracy' : 정확도를 측정한다. 
+
+#### 학습하기
+```python
+model.fit(x데이터(학습데이터), y데이터(실제 데이터), epochs=반복횟수)
+```
+- x데이터와 y데이터가 하나로 전처리되어 있는 경우는 그 데이터 하나만 넣어도 된다
+
+#### 모델을 이용한 예측하기
+```python
+model.predict(test_data)
+```
+- 훈련 데이터와 같은 데이터 형식을 넣어주어야 하며, numpy 배열 형식의 데이터가 필요하다
+<!-- ------------------------------------------------- -->
+# Pandas 메인
+- 행, 열로 구조화된 데이터를 다루는 라이브러리
+- Tensorflow에서는 데이터 전처리를 위해 pandas 라이브러리를 사용한다.
+- 일반적으로 `import pandas as pd`로 많이 불러온다
+## 함수
+### pd
+- `.read_csv(file_path)` : csv 파일을 읽어 dataframe 형식으로 반환한다
+- `.isnull()` : `null`, 또는 빈 행을 선택한다
+- `.dropna()` : 선택한 열을 drop(제거) 한다(`.isnull()`등 함수가 필요)
+### 기타
+- `.min()` : 해당 열의 최솟값을 반환한다
+- `.max()` :  해당 열의 최댓값을 반환한다
+- `.count()` : 해당 열의 행의 갯수를 반환한다
+- `.fillna(value)` ㅣ: `null` 또는 빈 값을 `value`로 대체한다.
+- `[column]` : 원하는 열을 선택하서 반환한다
+- `.values` : 선택된 열을 numpy 배열로 반환한다(단독으로 사용되지 않고 `[column]`과 함께 주로 쓰인다)
+- `.itterow()` : Java에서 foreach 문처럼 for문에서 데이터를 하나씩 가져오면서 반복한다. 행 번호, 행의 값 반환한다
+## DataFrame이란?
+- 표 형식의 데이터를 다루기 위한 자료형이다.
+- 행과 열로 구성되어 있으며, 각 열은 서로 다른 자료형을 가질 수 있다. 
+- 각 행은 인덱스를 가지며, 데이터에 빠르게 접근할 수 있다.
+- csv, excel, sql 데이터 베이스 등 다양한 데이터를 쉽게 변환할 수 있다
+<!-- ------------------------------------------------- -->
+# Numpy 메인
+- Tensorflow는 계산을 빠르고 쉽게 하기 위해 numpy 배열만 데이터로 받는다.
+- 일반적으로 `import numpy as np`로 많이 불러온다
+## 함수
+### np
+- `.array(data)` : 일반 배열을 numpy 배열로 변환한다. 

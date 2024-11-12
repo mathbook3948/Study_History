@@ -23,7 +23,12 @@ sudo systemctl restart docker #재시작
 docker pull ImageName
 ```
 - ImageName에 다운 받고싶은 Image의 이름을 넣으면 된다.
-### Image 확인
+### Image 제거
+```bash 
+docker rmi ImageName
+```
+- ImageName에 제거하고 싶은 Image의 이름을 넣으면 된다.
+### Image 목록 확인
 ```bash
 docker images
 ```
@@ -55,3 +60,10 @@ docker run [--name=ContainerName] [옵션] ImageName
 #### Container 실행 옵션
 - `-p LocalPort:ContainerPort` : 로컬 시스템(Docker가 실행되는 컴퓨터)의 특정 포트를 컨테이너의 포트로 연결한다.
 - `-d` : 컨테이너를 백그라운드에서 실행한다
+
+---
+# 정리 안된 내용
+## Docker Container 접속
+```bash
+docker exec -it ContainerName /bin/bash #bash 환경으로 가상화 접속
+```
