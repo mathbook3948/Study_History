@@ -83,3 +83,8 @@ var result = EntityNameRepository.findAll();
 - `.findBy<Column>(<Type> <value>)` :JPA가 자동으로 `findByColumn` 형식의 메서드를 생성하고, 매개변수로 해당컬럼의 타입과 같은 타입의 값을 받는다. 조건에 맞는 엔티티가 여러 개일경우 List 형태로 반환하고, 하나만 존재할 경우 Entity 형태로 반환한다.
 - `.findOneBy<Column>(<Type> <value>)` : `findby<Column>()` 과 거의 동일하게 JPA가 자동 생성시켜주며, Optional<T> 형태로 반환한다. 만약 조회된 엔티티가 여러 개일경우 NonUniqueResultException이 발생한다.
 - `.findFirstBy<Column>(<Type> <value>)` : `.findOneBy<Column>()`와 거의 동일하지만, 조회된 엔티티가 여러 개일경우 가장 첫번째 엔티티를 Optional<T> 형태로 반환한다.
+## 어노테이션 //TODO 정리하기
+- `@Table(name=)`
+- `@SequenceGenerator(name=, sequenceName=, initialValue=, allocationSize=)`
+- `@Temporal()`
+- `@Column([columnDefinition=], [length=], [nullable=])` 
