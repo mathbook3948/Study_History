@@ -40,16 +40,68 @@ git branch branch_name
 ```shell 
 git switch branch_name
 ```
+### branch 삭제
+```shell
+git branch -d branch_name # merge를 한 후 삭제
+git branch -D branch_name # merge를 하지 않고 삭제
+```
 ### branch merge
 - branch에서 정상적으로 동작해서 다른곳(main...)에 합치고 싶을 때 사용하는 명령어
 ```shell
-git merge branchB #branchA(main branch등..)에 합칠 때 branchB => branchA
+git merge branchB #branchA(main branch등..)에 합칠 때, branchA에서  진행해야 한다 
+#branchB => branchA
 ```
 - 어느 branch에 합칠지(어느 branch가 살아남을지) 잘 생각해야 한다
 #### CONFLICT
 - 같은 부분을 두곳 모두에서 수정 했을 때 충돌 문제가 생긴다.
 ##### Visual Studio Code의 경우
 - 자동 병합을 실패하면 다른 부분을 띄워주는데, 그 부분을 모두 고치고 다시 commit 하면 된다
+<!-- --------------------------------------------------------------------- -->
+#### merge 방법들
+##### 3-way merge
+- 각 branch에 신규 commit이 있는 경우
+##### fast-forward merge
+- 기준이 되는 branch에 신규 merge가 없는 경우. 즉, 새로운 branch에만 commit이 일어난 경우
+- 새로운 branch에 기준 branch의 이름을 그대로 상속한다(당연히 둘이 합칠게 없어서 가장 최근 branch가 이름을 이어 받는 것)
+###### 그렇게 하기 싫다면?
+~~괜한 반항심~~
+```shell
+git merge --no-ff branch_name
+```
+##### rebase & merge
+- rebase 란 branch의 시작점을 다른 commit으로 옮겨주는 행위이다
+```
+commit1-->commit2-->commit3
+                          |
+                          -->commit2-1-->commit2-2
+-----------------------------------------------------------------
+commit1-->commit2-->commit3-->commit2-1-->commit2-2
+```
+- 위와 같이 구조가 되어 있을 때 예시 1을 예시2와 같은 모양으로 바꾸어 주는 것이 rebase이다.
+```shell
+git switch branchB
+git rebase branchA #branchB를 branchA 앞에 합친다
+git switch branchA
+git merge branchB
+```
+- 단점 : CONFLICT 지옥이 발생할 수도 있다
+###### 쓰는 이유
+- 3-way merge만 사용하면 로그 그래프 볼 때 너무 지저분해진다. 간단한 branch들은 rebase & merge 하여 깔끔하게 보이게 할 수 있다
+
+##### squash and merge
+- 3-way merge와 같은 상황에서 새로운 branch의 가장 최근 commit을 기준 branch에 이전 기록을 다 삭제하고 merge 한다
+```
+commit1-->commit2-->commit3
+                          |
+                          -->commit2-1-->commit2-2
+-----------------------------------------------------------------
+commit1-->commit2-->commit3-->commit2-2
+```
+```shell
+git merge --squash branchB #branchA에서 진행. branchB => branchA
+```
+###### 쓰는 이유
+- 3-way merge를 남발하면 commit 로그가 매우 더러울 수 있어서
 <!-- ------------------------------------------------ -->
 
 ## 기록 확인 관련
