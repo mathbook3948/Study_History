@@ -32,6 +32,8 @@ git commit -m "메모"
 ## branch
 - 현재의 commit 상태를 복사한 새로운 commit을 만드는 것
 - 현재의 commit에 영향을 주지 않고 독립적이고, 병렬적으로 작업을 가능하게 해준다
+![pepe_branch](https://github.com/user-attachments/assets/6b5c616c-671b-4b73-b7e6-585271808ed9)
+
 ### branch 생성
 ```shell
 git branch branch_name
