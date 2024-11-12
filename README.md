@@ -16,6 +16,7 @@
 - [Mybatis in Spring Boot.md](https://github.com/mathbook3948/Study_History/blob/69fe635fd0208e2e62ad1346f3027827d6967b04/Spring%20Boot/Mybatis/Mybatis%20in%20Spring%20Boot.md): Spring Boot에서 Mybatis를 활용하는 방법에 대한 내용을 정리한 문서입니다.
 ### etc
 - [Docker.md](etc/Docker.md): Docker 개념, Linux에서 Docker 사용법을 다룬 문서입니다.
+- [Git.md](etc/Git.md): Git 사용법, 패턴을 정리한 문서입니다
 
 ## 기여 및 피드백
 이 프로젝트에 대한 피드백이나 기여는 언제든지 환영합니다! 함께 공부하고 성장해 나갑시다!
