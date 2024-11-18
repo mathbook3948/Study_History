@@ -4,3 +4,5 @@ Path 클래스
 .get
 .toAbsolutePath
 .normalize
+
+MultiPartFile 클래스
