@@ -138,3 +138,31 @@ git difftool [commit_id1] [commit_id2]
 ~~사실 이거도 쓸모없음~~
 
 사실 VSC에서 Git extension 아무거나 깔아도 이거보단 낫다
+
+<!-- ---------------------------------------------------- -->
+## 원격 저장소(Github)
+- Git이 기록을 저장해 놓는 곳을 Repository라고 한다.
+- 로컬 Repository를 온라인에 한번씩 올려서 기록 보관을 더 안전하게 할 수 있고, 협업도 쉬워진다
+### 업로드 하기 전에
+- Github 로그인하고 업로드 할 Repository를 만들기
+```shell
+#로컬에서 master branch로 이동 후..
+git branch -M main
+```
+- Github에서는 기본 branch를 main으로 하기 때문에 바꿔주는게 좋다
+### 원격 저장소로 업로드(push)
+```shell
+git push -u 원격저장소주소 올릴로컬branch명
+```
+- 선택한 원격 저장소로 branch가 업로드 된다
+- `-u`는 실행하는 명령에 있는 주소를 기억하는 옵션
+### 근데 업로드가 너무 복잡하다
+- 주소를 변수로 지정하여 간편하게 push 할 수 있다
+```shell
+git remote add 변수명 주소
+```
+#### 더더더 간단하게 업로드하기
+- `-u`로 한번 업로드를 했다면 그 다음에 같은 곳에 업로드 할 때 간단하게 업로드 할 수 있다
+```shell
+git push #가장 최근 -u 한 주소로 업로드된다
+```
