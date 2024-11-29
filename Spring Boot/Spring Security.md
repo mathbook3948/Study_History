@@ -50,7 +50,7 @@ server.servlet.session.cookie.max-age=1m 3s ...//쿠키가 유지되는 시간(�
 ## JWT
 - 여러가지 많은 정보들이 들어있는 티켓을 끊어서 준다. 
 - 티켓만 검사하면 되기 때문에,  DB 조회 없이 신원을 조회할 수 있다(서버(DB) 부담이 줄어든다).
-- 하지만 티켓이 털리면 막아줄 방법이 없다(사실 사용자 잘못)
+- 하지만 티켓이 털리면 막아줄 방법이 없다(사실 사용자 잘못). 그래서 보통 유효 시간을 짧게 설정한다(5~30분)
 
 ### 구성
 - 문자열이다.
@@ -158,6 +158,8 @@ public class JwtService {
         //현재 로그인 정보(Authentication 객체)을 이용하여 jwt 토큰을 만든다. 
         String jwt = JwtService.createToken(SecurityContextHolder.getContext().getAuthentication());
 
+        //response에 Cookie 객체를 만들어 넣으면 클라이언트 측에 쿠키가 저장이 된다.
+
         return jwt;
     }
 ```
@@ -205,17 +207,3 @@ public class JwtFilter extends OncePerRequestFilter { //OnceOerRequestFilter 를
     
 }
 ```
-
-
-
-
-
-
-
-new AuthenticationManagerBuilder()
-.authenticate(username, password)
-
-new UsernamePasswordAuthenticationToken()
-쿠기 설정하면 자동으로 보내줌
-
-extends OncePerRequestFilter
