@@ -22,3 +22,18 @@ HTML -> Virtual DOM->기존 Virtual DOM과 비교 -> 달라진 부분만 렌더�
 # 아직 정리 안된 부분
 jsx 안에 html을 넣기
 - dangerouslySetInnerHTML
+
+Component를 감싸는 Container 만들기
+```tsx
+interface Props {
+    children: ReactNode; // ReactNode 타입 : React 요소, number, string, 기타 모든 자료형을 나타내는 자료형. 자바에서 Object 하고 비슷한 느낌
+  }
+
+const ExampleComp: React.FC<Props> = ({ children }) => { // children에는 ExampleComp로 감싼 요소가 자동으로 들어간다.
+
+  return true ? <>{children}</> : <div>접근 권한이 없습니다.</div>;
+  // 조건을 줘서 특정 조건에만 화면 보이게 구성 가능
+};
+
+export default ExampleComp;
+```
