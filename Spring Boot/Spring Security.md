@@ -6,10 +6,16 @@
 - Principal : 보호 대상인 리소스에 접근하는 대상
 - Credential : Principal(대상)의 비밀번호
 - Hashing(해싱) : 주어진 입력값을 일정한 규칙에 따라 변환하여 고정된 길이의 출력을 만드는 것. 불가역성, 고유성, 고정된 길이 같은 속성을 가지고 있다
+- BASE64 : Unicode를 ASCII 영역 문자로 바꾸는 인코딩 방식
 
 # 아키텍쳐
 ```
-UsernamePasswordAuthenticationFilter -> ProviderManager -> DaoAuthenticationProvider(+UserDetails) -> ProviderManager -> UsernamePasswordAuthenticationFilter -> SecurityContextHolder
+UsernamePasswordAuthenticationFilter -> 
+ProviderManager -> 
+DaoAuthenticationProvider(+UserDetails) -> 
+ProviderManager -> 
+UsernamePasswordAuthenticationFilter -> 
+SecurityContextHolder
 ```
 - 기본 필터 중 하나인 **UsernamePasswordAuthenticationFilter**에서 UsernamePasswordAuthenticationToken 객체를 반환한다.
 - 여러개의 AuthenticationProvider을 관리하고, AuthenticationManager를 구현한 **ProviderManager** 클래스에서 AuthenticationProvider를 구현한 적절한 클래스에게 Authentication(UsernamePasswordAuthenticationToken)을 반환한다
@@ -19,34 +25,46 @@ UsernamePasswordAuthenticationFilter -> ProviderManager -> DaoAuthenticationProv
 - **UsernamePasswordAuthenticationFilter**에서 Authentication 객체를 SecurityContext 객체에 넣고, SecurityContextHolder에 저장한다.
 
 
----
-기본적으로 Authentication에는 
-Authentication 변수에 값을 더 넣어서 보내고 싶으면?
-- org.​springframework.​security.​core.​userdetails.User를 상속 받아서 입맛대로 개조
-```java
-class CustomUser extends User {
-
-    private String isPublic;
-
-    public CustomUser(String username, String password, Collection<? extends GrantedAuthority> auths, com.github.mathbook3948.back.entity.User user) {
-        super(username, password, auths);
-        this.isPublic = user.getUserRole().getIsPublic() == 1 ? IsPublic.PUBLIC.name() : IsPublic.PRIVATE.name();
-    }
-
-    public String getIsPublic() {
-        return isPublic;
-    }
-
-}
-```
-- 입맛 맞춰서 알아서 개조 ㄱㄱ
-
 세션 방식 로그인을 사용할 때 일정 시간 후 로그인 해제
 - application.properties에 
 ```properties
 server.servlet.session.timeout = 1m 2s .... //세션이 유지되는 시간(로그인이 유지되는 시간)
 server.servlet.session.cookie.max-age=1m 3s ...//쿠키가 유지되는 시간(로그인 티켓(쿠키)가 유지되는 시간)
 ```
+
+# ID/PW 로그인 방식
+## 공통 구현 사항
+### loadUserByUsername 메서드 구현
+```java
+//UserDetailsService
+UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+```
+- 로그인을 구현하려면 필수적으로 UserDetailsService를 구현한 클래스를 만들고, UserDetails을 구현한 클래스를 반환하는 loadUserByUsername 메서드를 만들어야 한다
+- 이 메서드에서 DB에서 Username을 이용해 유저 데이터를 가져오고, 그 데이터를 UserDetails를 구현한 객체에 넣어 반환해야 한다.
+- 모든 UserDetails를 구현한 클래스에 있는 `Collection<? extends GrantedAuthority> authorities` 변수가 있으며, DB에서 가져온 권한 정보를 그대로 넣을 수 없고, GrantedAuthority 객체로 변환한것들을 Collection에 넣어서 반환해야 한다. 이때, 가장 간단한 GrantedAuthority를 구현한 클래스는 **SimpleGrantedAuthority** 이며, 생성자에 role 매개변수를 받는데, 이때 role은 `ROLE_`로 시작해야한다.
+- UserDetails를 구현한 가장 기본적인 클래스는 User(org.springframework.security.core.userdetails)이다
+```java
+//가장 기본이 되는 생성자
+public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+		this(username, password, true, true, true, true, authorities);
+	}
+    //enabled, accountNonExpired, credentialsNonExpired, accountNonLocked 변수 모두 true로 설정한다
+```
+- 이 외에 복잡한 User 클래스를 만들고 싶다면 UserDetails를 구현 한 클래스를 만들면 된다.
+
+
+## Session
+- 서버에 로그인 정보를 저장하는 방식이다. 
+- 서버가 모든 로그인 정보를 가지고 있기 때문에 보안이 더 안전하다
+- 서버가 모든 로그인 정보를 가지고 있어야 하기 때문에 서버의 부하가 심하다
+### 방식
+1. 유저가 로그인 시 서버의 메모리에 세션(로그인 정보)이 저장된다. 이때 세션에는 각각 ID가 존재한다
+2. 유저의 브라우저에 쿠키로 Session ID가 저장된다
+3. 유저가 요청을 보낼 때 마다 쿠키에 있는 Session ID도 같이 보낸다
+4. 서버가 유저가 보낸 ID와 서버 메모리에 있는 ID 를 비교해서 일치하면 요청을 허가 해준다.
+
+### 직접 구현 해보기
+
 ## JWT
 - 여러가지 많은 정보들이 들어있는 티켓을 끊어서 준다. 
 - 티켓만 검사하면 되기 때문에,  DB 조회 없이 신원을 조회할 수 있다(서버(DB) 부담이 줄어든다).
@@ -77,7 +95,7 @@ server.servlet.session.cookie.max-age=1m 3s ...//쿠키가 유지되는 시간(�
 ```
 
 ### 직접 구현해보기
-
+//TODO
 #### build.gradle 추가
 ```gradle
 implementation 'io.jsonwebtoken:jjwt-api'
