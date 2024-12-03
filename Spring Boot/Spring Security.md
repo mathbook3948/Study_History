@@ -114,8 +114,22 @@ public User(String username, String password, Collection<? extends GrantedAuthor
 2. 1번에서의 값 + 비밀키 해싱
 3. 2번을 다시 인코딩
 ```
+### Refresh Token 
+- JWT 토큰은 탈취당했을 시 공격자가 인증받은 척 하고 요청을 보낼 수 있기 때문에 일반적으로 유효 기간을 5~30분 정도로 짧게 해둔다.
+- 유효기간이 짧다?? => 사용자는 5~30분 마다 로그인을 다시 해야한다(매우 귀찮음)
+- 이를 해결하기 위해 Refresh Token을 도입할 수 있다.
+#### 작동 방식
+1. 사용자가 로그인 성공 시 Refresh Token, Access Token을 두개 받는다
+2. Access Token이 만료되기 전까지 API 통신을 한다.
+3. 시간이 지나 Access Token이 만료(요청을 보내도 401 반환)
+4. 401이 반환되면 가지고 있는 Refresh Token을 같이 서버로 보냄
+5. Refresh Token의 유효성을 서버에서 확인하고 응답과 함께 새로운 Access Token을 header에 같이 보낸다
+6. 만약 Refresh Token도 만료되었다면 401 응답을 다시 보낸다
+- Access Token을 다시 보낼때 기존 Refresh Token을 무력화 시키고 새로운 Refresh Token 보내서 보
+
 
 ### 직접 구현해보기
+//TODO
 
 #### build.gradle 추가
 
@@ -329,8 +343,12 @@ public class JwtFilter extends OncePerRequestFilter { //OnceOerRequestFilter 를
             return;
         }
 
+        //권한을 하나만 String 형식으로 토큰에 넣어 넘긴 예시
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(claims.get("authority", String.class)));
+
         var authToken = new UsernamePasswordAuthenticationToken( // Authentication을 구현한 UsernamePasswordAuthenticationToken을 생성한다
-            claims.get("username"),"" //username은 가져오지만, 비밀번호는 JWT 토큰을 만들 때 넣지 않아 몰라서 빈 문자열 넣음
+            claims.get("username"),"", authorities //username은 가져오지만, 비밀번호는 JWT 토큰을 만들 때 넣지 않아 몰라서 빈 문자열 넣음
         );
 
         //SecurityContextHolder에 현재 로그인 정보(Authentication 객체)를 SecurityContext에 담아서 저장
