@@ -1,4 +1,4 @@
-# Tree 구조란?
+![Trie](https://github.com/user-attachments/assets/678673c9-2a3d-4f5e-8439-21df0af7ca38)# Tree 구조란?
 - 계층적 데이터를 효율적으로 탐색하기 위해 사용되는 자료 구조
 ## 특징
 - 계층적 구조 : 사진에서 보이는것 처럼 부모->자식 요소로 구성되어 있다(단, 루트 요소는 제외)
@@ -14,7 +14,8 @@
 ## Trie 구조
 - 문자열을 효율적으로 검색하기 위한 자료 구조이다 
 - 사전에서 단어를 찾는것을 생각하면 된다
-(사진 넣기 //TODO)
+![Trie](https://github.com/user-attachments/assets/fc56d210-c1e1-44d2-b723-be79a998eea8)
+
 ### 구현
 #### Java
 ##### TrieNode.java
