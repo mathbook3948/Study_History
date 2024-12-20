@@ -10,6 +10,8 @@
 - 데이터에 정답이 없고 알아서 비슷한것 끼리 분류를 하는 모델을 만들 때 사용
 ### Reinforcement Learning(강화 학습)
 - 특정 행동을 할때마다 보상을 주고, 이 보상을 최대화 하는 방식으로 행동하는 모델을 만들 때 사용
+### Transfer Learning(전이 학습)
+- 기존에 있던 성능 좋은 모델을 가져와서 가중치, 원하는 레이어 등을 뽑아와서 더 성능이 좋은 모델을 만드는 방법
 ## 용어 및 개념
 ### 가중치(W)
 - 어떤 데이터가 결과에 미치는 영향력
@@ -52,6 +54,25 @@ $$
 ### 파라미터 튜닝
 - 모델의 성능을 최적화 하기 위하여 Learning Rate, epochs, 등 조절 가능한 값을 조절 하는 것이다. 또한, 확률을 예측하는 모델의 경우 학습데이터를 0~1로 조절(적절한 값을 나누는 등)하는 방법이 있다
 
+### CNN(Convolutional Neural Network)
+- 이미지 같은 것을 예측하거나 할 때 2차원 이상의 데이터를 Flatten 레이어로 1차원으로 만들어야 하는 경우가 생긴다.
+- 이미지를 일자로 나열한다면 규칙이 깨져서 유연한 모델을 만들기 힘들어진다
+#### 해결책
+1. 이미지의 중요한 정보를 추려서 복사본을 만든다. 각 이미지는 원본 이미지의 특성을 강조하는 성격을 지니고 있다.
+2. 이미지 정보를 중앙으로 모으는 Pooling 레이어를 거친다
+3. 중앙으로 모인 정보를 바탕으로 Flatten 레이어를 거친다.
+
+##### 1. 이미지의 복사본 생성
+```python
+tf.keras.layers.Conv2D(복사본갯수, (kernal_x, kernal_y), [padding = "same"], activation = 'relu') 
+# padding : kernal을 적용하면 크기가 작아질 수 밖에 없는데, 작아진 만큼 padding을 추가해주는 설정을 할 수 있다.
+# activation = 'relu' : 이미지의 rgb는 0~255 이여서 음수가 나오지 않게 설정한다
+```
+##### 2. 이미지 정보를 중앙으로 모으는 Pooling 레이어
+```python
+tf.keras.layers.MaxPooling2D((x,y))  #가장 큰 값을 중앙으로 모음
+# x, y : 2, 2일 경우 2,2 x 4개. 즉, 4, 4 -> 2,2를 진행한다
+```
 # 함수, 알고리즘들
 ## Learning Rate Optimizer
 ### Momentum
@@ -72,7 +93,11 @@ $$
 - 0과 1 사이로 추려지기에 확률 문제에 적합하다.
 ### ReLU(Rectified Linear Unit, 경사 함수) 
 - 음수는 0으로 처리하고 x가 0일때부터는 기울기가 1인 일차함수로 표현된다.
+
+
 <!-- ------------------------------------------------- -->
+
+
 # Tensorflow 메인
 - 일반적으로 `import tensorflow as tf`로 짧게 바꿔서 불러온다
 ## tensor 자료형
@@ -104,22 +129,56 @@ $$
 #### 데이터 전처리 하기
 - 먼저 데이터 사이에 빈 값이나 `null` 이 있는지 확인하고 제거하거나 평균값 등을 넣어준다(`.fillna()`, `.dropna()` 등을 사용할 수 있다)
 - 데이터 준비가 끝나면, numpy 배열로 데이터를 준비시킨다.
-#### 모델의 신경망 레이어 만들기
-- `tf.keras.models.Sequential([])` 등을 사용하여 신경망의 틀을 정의하고 내부에 레이어들을 채워 넣는다
+##### `tf.keras.preprocessing`
+###### `.image_dataset_from_directory()`
+- 폴더에 저장된 이미지 파일을 데이터셋으로 로드할 수 있게 해주는 함수
+- 경로에 폴더별로 이미지를 나눠주면 자동으로 라벨링 해준다
 ```python
-model = tf.keras.models.Sequential([ #변수에 모델을 저장해 놓는다
-    tf.keras.layers.Dense(node_num1, activation="activation1"),
-    tf.keras.layers.Dense(node_num2, activation="activation2"),
-    ....
-])
+#매개변수
+directory = "" # 데이터셋으로 만들기 원하는 사진의 폴더의 경로
+image_size = (x, y) #
+barch_size = batch_size # 한번에 처리할 이미지의 갯수를 정함
+subset = "" # training과 validation을 넣을 수 있으며, 데이터를 훈련용과 검증용으로 나누기 위해 사용한다. 보통 seed, validation_split 매개변수를 같게 설정한다
+validation_split = 0 ~ 1 # 0에서 1 사이의 값을 넣을 수 있으며, validation 데이터의 비율을 결정한다
+seed = seed # 데이터를 나눌 시드를 정한다
+
+
 ```
+#### 모델의 신경망 레이어 만들기
+- 모델의 틀을 선택하고, 레이어들을 채운다
 - 첫 레이어에는 `input_shape` 속성을 주는 것이 좋다. 입력되는 데이터의 형태를 입력 받는다.
 - 마지막 레이어의 노드의 갯수는 원하는 결과의 갯수와 같게 해야 한다.
+##### 모델
+- `.Sequential([])` : 가장 기본적인 모델. 단순히 순서대로 레이어가 배열된다
+```python
+input = tf.keras.layers.Input(shape= [28, 28])
+flatten1 = tf.keras.layers.Flatten()(input)
+dense1 = tf.keras.layers.Dense(28 * 28, activation = 'relu')(flatten1)
+reshape = tf.keras.layers.Reshape((28, 28))(dense1)
+concat = tf.keras.layers.Concatenate()([input, reshape])
+flatten2 = tf.keras.layers.Flatten()(concat)
+output = tf.keras.layers.Dense(10, activation = 'softmax')(flatten2)
+model = tf.keras.Model(input, output)
+```
+- Functional API : 각 레이어들을 변수로 나눠서 연결 해주는 방식의 모델. `tf.keras.Model()`의 매개변수에 입력 레이어  , 반환 레이어를 명시만 해줘도 된다
+##### 강화 학습
+```python
+inception_model = InceptionV3(input_shape = (150, 150, 3), include_top = False, weights = None)
+inception_model.load_weights("./asset/model/inception_v3_weights_tf_dim_ordering_tf_kernels_notop.h5")
+# 예시처럼 기존 모델과 가중치를 불러온다.
+```
+- `.load_weights(path)` : path(경로)에서 가중치 파일(.h5등)을 불러온다
+- `.get_layer(layer_name)` : 해당 모델에 있는 레이어중 일치하는 이름의 레이어를 가져온다. 이후 새로운 레이어를 추가하면 기존 레이어는 사라진다
 ##### 레이어 목록
 - `tf.keras.layers.Dense(노드갯수, activation=)` : 기본적인 계산을 수행하는 노드들을 가지고 있는 레이어이다.
+- `tf.keras.layers.Flatten()` : 
+- `tf.keras.layers.Reshape()` : `Flatten` 레이어와 반대로 차원을 높이는 레이어이다. 이전 레이어와 총 노드의 수는 같아야 한다
+- `tf.keras.layers.Concatenate()` :
+- `tf.keras.layers.Conv2D(복사본갯수, (kernal_x, kernal_y), [padding = "same"], activation=)` : CNN에서 자세히 다룸
+- `tf.keras.layers.MaxPooling2D((x,y))` : CNN에서 자세히 다룸
 #### Optimizer, 손실함수 정하기
 ```python
-model.compile(optimizer=, loss=, metrios=)
+model.compile(optimizer=, loss=, metrics=)
 ```
 - Learning Rate Optimizer, Loss Function 를 적절히 찾아 넣으면 된다. 어떤 학습을 시킬지에 따라 종류를 잘 선택해야 한다
 ##### metrios
