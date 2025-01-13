@@ -85,3 +85,8 @@ None
 s = pd.Series([1, 2, 3])
 s.to_excel('output.xlsx')
 ```
+##### .grouby()
+### DataFrameGroupBy 클래스
+- DataFrame을 특정 기준으로 그룹화하여 집계/분석하는 클래스
+- `DataFrame.groupby()` 메서드 호출 시 반환되는 클래스
+#### 주요 메서드
