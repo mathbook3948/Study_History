@@ -11,7 +11,17 @@ Elasticsearch
 - 이런식으로 저장 후, 요청이 들어오면 분석(토큰화, 정규화 등)을 통해 연관도가 가장 높은 결과를 반환한다
 ## 사용 방법
 - 기본적으로 9200 포트에서 작동(ex:localhost:9200)
-### index 생성
+```shell
+# 시작
+./bin/elasticsearch
+
+# 종료
+./bin/elasticsearch -s
+
+# plugin(ex: nori) 확인
+./bin/elasticsearch-plugin list
+```
+### settings
 ```
 "settings": {
     
@@ -31,10 +41,10 @@ Elasticsearch
         "my_analyzer1": { // 이름은 알아서 지정하기
             "type":
             ["tokenizer": ]
-            ["filter": ] // 배열로 여러게 설정 가능
+            ["filter": ] // 배열로 여러 개 설정 가능
         },
         "my_analyzer2": {
-        
+            ...
         }
     }
 }
@@ -54,6 +64,7 @@ Elasticsearch
     }
 }
 ```
+- nori 설치 : `./bin/elasticsearch-plugin install analysis-nori`
 ##### "type"
 - 분석기의 종류를 지정한다
 ```
@@ -118,3 +129,20 @@ curl -X GET "localhost:9200/books/_search" -H "Content-Type: application/json" -
 #### 4. 범위 검색
 #### 5. 복합 검색
 #### 6. 가중치 검색
+# Kibana
+- Elasticsearch의 데이터를 시각화를 통해 직관적으로 정보를 보여주기 위한 도구
+- 브라우저 인터페이스를 활용하여 많은 데이터를 시각화 및 분석 할 수 있다
+- Kibana와 Elasitcsearch의 버전은 반드시 동일해야한다
+## 사용 방법
+- 기본적으로 5601 포트에서 작동한다
+### 서버의 상태 확인하기
+```
+http://YOUR_DOMAIN_OR_IP:5601/status
+```
+### Analytics
+#### Discover
+- 데이터를 확인하고 탐색하기 위한 용도
+#### Visualize
+- 데이터를 시각화하기 위한 도구를 제공한다
+#### Dashboard
+- 데이터를 여러 관점으로 볼 수 있는 화면을 제공한다
