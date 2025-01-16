@@ -36,6 +36,17 @@ kernel_size : 커널의 크기. (height, width) 튜플 또는 단일 정수(예:
 activation : 이미지의 rgb는 0~255 이여서 음수가 나오지 않게 설정하는 relu를 많이 사용한다
 ```
 - `tf.keras.layers.MaxPooling2D((x,y))` : 지정한 크기에서 가장 큰 값들을 중앙으로 모은다 (x, y : 2, 2일 경우 2,2 x 4개. 즉, 4, 4 -> 2,2를 진행한다)
+### 데이터 증강 레이어(사진)
+- `tf.keras.layers.RandomFlip(mode='horizontal')`: 이미지를 좌우 또는 상하로 뒤집습니다. mode는 'horizontal', 'vertical'을 사용할 수 있다.
+- `tf.keras.layers.RandomRotation(factor=0.2)`: 이미지를 지정된 각도 범위 내에서 무작위로 회전시킵니다. factor 0.2는 ±20% 회전을 의미한다.
+- `tf.keras.layers.RandomZoom(height_factor=0.2)`: 이미지를 무작위로 확대/축소합니다. 0.2는 ±20% 크기 변화를 의미한다.
+- `tf.keras.layers.RandomTranslation(height_factor=0.2, width_factor=0.2)`: 이미지를 가로/세로로 이동시킨다.
+- `tf.keras.layers.RandomBrightness(factor=0.2)`: 이미지의 밝기를 무작위로 조정한다.
+- `tf.keras.layers.RandomContrast(factor=0.2)`: 이미지의 대비를 무작위로 조정한다.
+- `tf.keras.layers.RandomCrop(height, width)`: 이미지를 지정된 크기로 무작위로 가린다.
+- `tf.keras.layers.GaussianNoise(stddev=0.1)`: 가우시안 노이즈를 추가한다.
+- `tf.keras.layers.RandomSaturation(factor=0.2)`: 이미지의 채도를 무작위로 조정한다
+- `tf.keras.layers.RandomHue(factor=0.2)`: 이미지의 색조를 무작위로 조정한다.
 
 ### 모델 유형
 #### Sequential 모델
@@ -62,10 +73,32 @@ outputs = Dense(10, activation='softmax')(x)
 model = Model(inputs=inputs, outputs=outputs)
 ```
 
+## 모델 학습
+### Compile
+```python
+model.compile(optimizer=, loss=, metrics=)
+```
+- optimizer : Learning Rate Optimizer
+- loss : Loss Function
+- metrics : 모델의 성능을 측정하는 값
+```
+'accuracy'
+'mae'
+```
+### Fit(학습)
+```python
+model.fit(x데이터(학습데이터), y데이터(실제 데이터), epochs=반복횟수)
+```
+- x데이터와 y데이터가 하나로 전처리(튜플)되어 있는 경우는 그 데이터 하나만 넣어도 된다
+### 모델을 이용한 예측하기
+```python
+model.predict(test_data)
+```
+- 훈련 데이터와 같은 데이터 형식을 넣어주어야 하며, numpy 배열 형식의 데이터가 필요하다
+- 
 <!--======================================================밑은 정리중-->
 
 # Tensorflow 메인
-
 ## tensor 자료형
 - 숫자, 리스트(숫자) 등의 데이터를 담는 곳이다.
 - 자료의 차원(리스트 안에 리스트 안에 리스트)이 높아져도 계산을 쉽게 할 수 있다(자동을 해줌)
@@ -92,11 +125,6 @@ model = Model(inputs=inputs, outputs=outputs)
 2. Optimizer, 손실함수 정하기
 3. 학습하기
 4. 모델을 이용한 예측하기
-#### 데이터 전처리 하기
-#### 모델의 신경망 레이어 만들기
-- 모델의 틀을 선택하고, 레이어들을 채운다
-- 첫 레이어에는 `input_shape` 속성을 주는 것이 좋다. 입력되는 데이터의 형태를 입력 받는다.
-- 마지막 레이어의 노드의 갯수는 원하는 결과의 갯수와 같게 해야 한다.
 ##### 모델
 ##### 전이 학습
 ```python
@@ -106,25 +134,4 @@ inception_model.load_weights("./asset/model/inception_v3_weights_tf_dim_ordering
 ```
 - `.load_weights(path)` : path(경로)에서 가중치 파일(.h5등)을 불러온다
 - `.get_layer(layer_name)` : 해당 모델에 있는 레이어중 일치하는 이름의 레이어를 가져온다. 이후 새로운 레이어를 추가하면 기존 레이어는 사라진다
-##### 레이어 목록
 
-
-#### Optimizer, 손실함수 정하기
-```python
-model.compile(optimizer=, loss=, metrics=)
-```
-- Learning Rate Optimizer, Loss Function 를 적절히 찾아 넣으면 된다. 어떤 학습을 시킬지에 따라 종류를 잘 선택해야 한다
-##### metrios
-- 'accuracy' : 정확도를 측정한다. 
-
-#### 학습하기
-```python
-model.fit(x데이터(학습데이터), y데이터(실제 데이터), epochs=반복횟수)
-```
-- x데이터와 y데이터가 하나로 전처리(튜플)되어 있는 경우는 그 데이터 하나만 넣어도 된다
-
-#### 모델을 이용한 예측하기
-```python
-model.predict(test_data)
-```
-- 훈련 데이터와 같은 데이터 형식을 넣어주어야 하며, numpy 배열 형식의 데이터가 필요하다

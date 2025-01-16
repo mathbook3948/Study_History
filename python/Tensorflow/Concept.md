@@ -27,6 +27,8 @@
 - 활성화 함수가 없을 경우 선형적인 예측만 가능하다(아무리 복잡한 구조여도 식을 정리하고 치환한다면 1차함수 모양으로 나온다)
 ### 손실 함수
 - 오차들을 계산을 통해 평균을 내는 역할을 하는 함수
+### 학습률
+- 가중치를 한번에 얼마만큼 변경해야 하는지를 의미한다.
 ### 경사하강법
 ![Pasted image 20241108224009](https://github.com/user-attachments/assets/f7cc6100-b1de-4d19-979b-faef5995b599)
 -  이 그래프는 가로가 가중치, 세로가 오차를 뜻한다.
@@ -78,11 +80,76 @@
 ### Adam
 - 가장 자주 쓰인다(왜그런지 //TODO)
 ## Loss Function(손실 함수)
+### mean_squared_error(MSE)
+- 오차를 제곱한 값의 평균을 손실값으로 정하는 함수이다.
+- 오차를 제곱하여 평균을 구하기에 항상 양수가 나오고, 실제 값에서 멀어질수록 손실이 크게 증가하는 특징이 있다.
+```python
+def mse(y_true, y_pred):
+  return (np.array([y_true[i] - y_pred[i] for i in range(len(y_true))]) ** 2).mean()
+```
 ### binary_crossentropy
 //TODO
 ## Activation Function(활성화 함수)
 ### Sigmoid(시그모이드)
 - 0~1 사이로 값을 만들어준다. (0, 0.5)에서 만나며, 이후 x가 증가할 때 1에 가까워지고, x가 감소할 때 0에 가까워진다.
 - 0과 1 사이로 추려지기에 확률 문제에 적합하다.
+```python
+def sigmoid(x):
+    return 1 / (1 + math.e ** -x)
+```
 ### ReLU(Rectified Linear Unit, 경사 함수)
 - 음수는 0으로 처리하고 x가 0일때부터는 기울기가 1인 일차함수로 표현된다.
+
+## 기초 머신러닝 알고리즘
+### 선형 회귀(Linear Regression)
+- 데이터 x를 넣었을 때 실제 y에 가장 가까운 선(실제 y를 가장 잘 설명하는 선)을 찾는 방법이다
+```python
+# 2차원 모델
+def model(x, a, b):
+  return x * a + b
+```
+### 로지스틱 회귀(Logistic Regression)
+- 특정 정보를 가지고 0~1의 값(즉, 확률)으로 예측해주는 방법이다
+<!--================================-->
+기초 머신러닝 알고리즘
+
+
+선형 회귀 (Linear Regression)
+로지스틱 회귀 (Logistic Regression)
+k-최근접 이웃 (k-Nearest Neighbors)
+결정 트리 (Decision Trees)
+서포트 벡터 머신 (Support Vector Machines)
+
+
+앙상블 학습
+
+
+랜덤 포레스트 (Random Forest)
+그래디언트 부스팅 (Gradient Boosting)
+XGBoost, LightGBM
+
+
+기초 신경망
+
+
+퍼셉트론 (Perceptron)
+다층 퍼셉트론 (Multi-Layer Perceptron)
+역전파 알고리즘 (Backpropagation)
+
+
+심층 신경망 (딥러닝)
+
+
+합성곱 신경망 (CNN)
+순환 신경망 (RNN)
+LSTM과 GRU
+오토인코더 (Autoencoder)
+
+
+고급 딥러닝 아키텍처
+
+
+트랜스포머 (Transformer)
+BERT, GPT 등의 사전학습 모델
+GAN (Generative Adversarial Network)
+변분 오토인코더 (VAE)
