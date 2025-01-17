@@ -41,7 +41,7 @@ activation : 이미지의 rgb는 0~255 이여서 음수가 나오지 않게 설�
 - `tf.keras.layers.MaxPooling2D((x,y))` : 지정한 크기에서 가장 큰 값들을 중앙으로 모은다 (x, y : 2, 2일 경우 2,2 x 4개. 즉, 4, 4 -> 2,2를 진행한다)
 ### CNN 구조
 #### MobileNet 구조
-- `tf..keras.applications.MobileNet()`
+- `tf.keras.applications.MobileNet()`
 ```python
 model = MobileNet(
     input_shape=,  # 기본 입력 크기
@@ -59,8 +59,6 @@ model = MobileNet(
 - `tf.keras.layers.RandomContrast(factor=0.2)`: 이미지의 대비를 무작위로 조정한다.
 - `tf.keras.layers.RandomCrop(height, width)`: 이미지를 지정된 크기로 무작위로 가린다.
 - `tf.keras.layers.GaussianNoise(stddev=0.1)`: 가우시안 노이즈를 추가한다.
-- `tf.keras.layers.RandomSaturation(factor=0.2)`: 이미지의 채도를 무작위로 조정한다
-- `tf.keras.layers.RandomHue(factor=0.2)`: 이미지의 색조를 무작위로 조정한다.
 
 ### 모델 유형
 #### Sequential 모델
@@ -101,9 +99,41 @@ model.compile(optimizer=, loss=, metrics=)
 ```
 ### Fit(학습)
 ```python
-model.fit(x데이터(학습데이터), y데이터(실제 데이터), epochs=반복횟수)
+model.fit(
+    x데이터(학습데이터), 
+    y데이터(실제 데이터), 
+    epochs=반복횟수,
+    class_weight=None,  # 클래스별 가중치 설정 (불균형 데이터 처리)
+)
 ```
 - x데이터와 y데이터가 하나로 전처리(튜플)되어 있는 경우는 그 데이터 하나만 넣어도 된다
+#### class_weight
+- class_weight는 불균형 데이터셋을 다룰 때 특히 유용하다.
+- 딕셔너리 형태로 각 클래스의 가중치를 지정합니다
+- 소수 클래스에 더 높은 가중치를 부여하여 모델의 학습을 조정할 수 있다
+- 가중치 값이 클수록 해당 클래스의 오차에 더 큰 페널티가 부여된다
+```python
+# 예시
+def create_balanced_weights(y_train):
+    total_samples = len(y_train)
+    unique_classes = np.unique(y_train)
+    class_counts = [len(y_train[y_train == cls]) for cls in unique_classes]
+
+    max_count = max(class_counts)
+    weights = {}
+    for i, count in enumerate(class_counts):
+        weights[i] = (max_count / count) * 0.5 
+
+    return weights
+
+# class_weight에 지정 시, 내부적으로 weight = (max_count / current_count) * 0.5
+```
+#### 팁
+- 사진 데이터(CNN)을 처리할 때 처음부터 데이터 증강을 하면 결과가 좋지 않다.
+```
+데이터(증강x) 학습 -> 데이터(증강o) 학습 -> ...
+```
+- 이런식으로 순차적으로 하면 그나마 좀 나은 결과가 나온다
 ### 모델을 이용한 예측하기
 ```python
 model.predict(test_data)
