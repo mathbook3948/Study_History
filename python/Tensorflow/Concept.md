@@ -63,10 +63,53 @@
 #### CNN(Convolutional Neural Network) - 합성곱 신경망
 - 이미지 같은 것을 예측할 때 2차원 이상의 데이터를 Flatten 레이어로 1차원으로 만들어야 하는 경우가 생긴다.
 - 이미지를 일자로 나열한다면 규칙이 깨져서 유연한 모델을 만들기 힘들어진다
-#### 해결책
+##### 해결책
 1. 이미지의 중요한 정보(특징)를 추려서 복사본을 만든다. 각 이미지는 원본 이미지의 특성을 강조하는 성격을 지니고 있다.
 2. 이미지 정보를 중앙으로 모으는 Pooling 레이어를 거친다
 3. 중앙으로 모인 정보를 바탕으로 Flatten 레이어를 거친다 -> 모든 이미지의 정보가 중앙으로 집중된다
+##### MobileNet
+- 적은 메모리로도 성능 좋고 빠른 모델을 만들기 위한 구조
+- CNN을 하는데, 각 채널에 따로 계산을 한 후, 합치는 구조
+###### **핵심 구조: Depthwise Separable Convolution**
+1. 일반적인 컨볼루션의 문제점
+- 모든 입력 채널과 출력 채널을 한 번에 처리
+- 연산량: (입력 크기) × (필터 크기) × (입력 채널 수) × (출력 채널 수)
+- 예: 16×16 이미지, 3×3 필터, 3채널 입력, 256채널 출력
+  → 16×16 × (3×3×3) × 256 = 매우 많은 연산량
+
+2. MobileNet의 해결방법 (2단계로 분리)
+   1) Depthwise Convolution
+   - 각 입력 채널별로 따로 공간적 특징 추출
+   - 연산량: (입력 크기) × (필터 크기) × (입력 채널 수)
+   - 예: 16×16 × (3×3) × 3 = 훨씬 적은 연산량
+
+   2) Pointwise Convolution (1×1 Convolution)
+   - 각 채널의 특징들을 결합
+   - 연산량: (입력 크기) × 1 × (입력 채널 수) × (출력 채널 수)
+   - 예: 16×16 × 1 × 3 × 256 = 추가적인 연산
+##### MobileNetV2
+- ResNet의 장점을 흡수한 버전
+- BottleNeck 구조를 사용하였다(1x1 Conv(차원 높임) -> 기존 MobileNet -> 1x1 Conv(차원 줄임))
+##### ResNet
+- 레이어가 깊어질수록 복잡해져서 원래 정보를 까먹는 걸 해결하기 위한 방법
+###### ###### **핵심 구조: Residual Learning (잔차 학습)** 
+1. 일반적인 컨볼루션의 문제점
+- 더 깊은 네트워크가 오히려 성능이 떨어지는 현상 발생
+- 단순히 층을 쌓는 것으로는 성능 향상의 한계
+2. ResNet의 해결방법 
+   1) Skip Connection (지름길 연결)
+   - 입력을 출력에 바로 더해주는 연결 추가
+   - 입력이 그대로 출력에 전달되어 까먹는거 방지
+    2) Residual Learning
+   - //TODO
+---
+##### BottleNeck 구조
+- 입력 : 256 채널 --> 3x3 Conv를 바로 진행하면 256채널에서 모두 3x3 연산이 이루어짐(매우 무거움)
+###### 해결
+1. 256 → 64 채널로 줄이고
+2. 64 채널에서만 3x3 연산
+3. 다시 64 → 256으로 늘림
+- 연산은 하지만 계산이 훨씬 줄어듦
 
 # 함수, 알고리즘들
 ## Learning Rate Optimizer
@@ -110,46 +153,3 @@ def model(x, a, b):
 ```
 ### 로지스틱 회귀(Logistic Regression)
 - 특정 정보를 가지고 0~1의 값(즉, 확률)으로 예측해주는 방법이다
-<!--================================-->
-기초 머신러닝 알고리즘
-
-
-선형 회귀 (Linear Regression)
-로지스틱 회귀 (Logistic Regression)
-k-최근접 이웃 (k-Nearest Neighbors)
-결정 트리 (Decision Trees)
-서포트 벡터 머신 (Support Vector Machines)
-
-
-앙상블 학습
-
-
-랜덤 포레스트 (Random Forest)
-그래디언트 부스팅 (Gradient Boosting)
-XGBoost, LightGBM
-
-
-기초 신경망
-
-
-퍼셉트론 (Perceptron)
-다층 퍼셉트론 (Multi-Layer Perceptron)
-역전파 알고리즘 (Backpropagation)
-
-
-심층 신경망 (딥러닝)
-
-
-합성곱 신경망 (CNN)
-순환 신경망 (RNN)
-LSTM과 GRU
-오토인코더 (Autoencoder)
-
-
-고급 딥러닝 아키텍처
-
-
-트랜스포머 (Transformer)
-BERT, GPT 등의 사전학습 모델
-GAN (Generative Adversarial Network)
-변분 오토인코더 (VAE)
