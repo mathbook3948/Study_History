@@ -1,3 +1,5 @@
+from cgi import logfile
+
 # Tensorflow 란?
 - 구글에서 만든 딥러닝 프로그램을 쉽게 구현할 수 있도록 기능을 제공하는 라이브러리'
 # Tensorflow 메인
@@ -49,6 +51,19 @@ model = MobileNet(
     weights='imagenet',  # 사전 훈련된 가중치("imagenet"), None 모든 가중치를 랜덤으로 초기화
     classes=1000  # 분류할 클래스 수
 )
+```
+### 정규화 레이어
+- tf.keras.nn.local_response_normalization()
+```python
+tf.nn.local_response_normalization(
+   input=,
+   depth_radius=,
+   bias=1,
+   alpha=1,
+   beta=0.5,
+   name=None
+)
+출처: https://neurowhai.tistory.com/134 [NeuroWhAI의 잡블로그:티스토리]
 ```
 ### 데이터 증강 레이어(사진)
 - `tf.keras.layers.RandomFlip(mode='horizontal')`: 이미지를 좌우 또는 상하로 뒤집습니다. mode는 'horizontal', 'vertical'을 사용할 수 있다.
@@ -128,12 +143,34 @@ def create_balanced_weights(y_train):
 
 # class_weight에 지정 시, 내부적으로 weight = (max_count / current_count) * 0.5
 ```
+#### early stopping
+- 더이상 진전 없을 경우 epoch 알아서 멈추는거
+```python
+earlystopping = tf.keras.callbacks.EarlyStopping(
+    monitor= # 모니터링할 val_loss, val_acc, loss, acc
+    patience=
+    mod= # 낮아지는걸 원하냐 높아지는걸 원하냐 max, min
+)
+```
 #### 팁
 - 사진 데이터(CNN)을 처리할 때 처음부터 데이터 증강을 하면 결과가 좋지 않다.
 ```
 데이터(증강x) 학습 -> 데이터(증강o) 학습 -> ...
 ```
 - 이런식으로 순차적으로 하면 그나마 좀 나은 결과가 나온다
+```python
+tensorboard = tf.keras.callbacks.TensorBoard(log_dir='logs/{}'.format('~~' + str(int(time.time()))) )
+model.fit(어쩌구, callbacks=[tensorboard]) 
+
+# ========= 다음 셀(코랩)
+%load_ext tensorboard
+# ========= 다음 셀(코랩)
+%tensorboard --logdir logs
+
+# ========= fit 완료후(로컬)
+tensorboard --logdir logs
+```
+- 학습 로그 생성, 시각화 알아서 해준다
 ### 모델을 이용한 예측하기
 ```python
 model.predict(test_data)

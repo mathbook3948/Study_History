@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
-csv_data = pd.read_csv("./spaceship-titanic/test.csv")
+csv_data = pd.read_csv("spaceship-titanic/test.csv")
 print(csv_data.head())
 
 def homeplanet(homeplanet : DataFrame) :

@@ -22,7 +22,7 @@ VRDeck: VR 데크 이용 관련 데이터
 Name: 승객 이름
 Transported: 운송 완료 여부
 '''
-csv_data = pd.read_csv("./spaceship-titanic/train.csv")
+csv_data = pd.read_csv("spaceship-titanic/train.csv")
 print(csv_data.head())
 
 def homeplanet(homeplanet : DataFrame) :

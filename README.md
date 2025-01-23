@@ -7,7 +7,7 @@
 
 ## 공부한 주제 목록
 ### Tensorflow
-- [Tensorflow.md](python/Tensorflow/Tensorflow.md): Tensorflow에 대한 기본 개념과 활용 방법을 정리한 문서입니다.
+- [Tensorflow.md](python/ML/Tensorflow/Tensorflow.md): Tensorflow에 대한 기본 개념과 활용 방법을 정리한 문서입니다.
 ### Spring Boot
 - [Spring Boot.md](https://github.com/mathbook3948/Study_History/blob/69fe635fd0208e2e62ad1346f3027827d6967b04/Spring%20Boot/Spring%20Boot.md): Spring Boot, Spring MVC 등을 다루고 있는 문서입니다
 #### JPA

@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 
 #PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked
 #승객번호,생존여부(0=사망1=생존),좌석등급(1=1등2=2등3=3등),이름,성별,나이,동승한가족수(형제자매배우자),동승한가족수(부모자녀),티켓번호,운임,객실번호,탑승항(C=셰르부르Q=퀸즈타운S=사우샘프턴)
-train = pd.read_csv("./titanic/train.csv")
+train = pd.read_csv("titanic/train.csv")
 train['Age'] = train['Age'].fillna(train['Age'].mean())
 maxAge = train['Age'].max()
 train["Age"] = train['Age'].map(lambda x : x / maxAge)
@@ -59,7 +59,7 @@ model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["acc"])
 
 model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=60)
 
-train = pd.read_csv("./titanic/test.csv")
+train = pd.read_csv("titanic/test.csv")
 train['Age'] = train['Age'].fillna(train['Age'].mean())
 maxAge = train['Age'].max()
 train["Age"] = train['Age'].map(lambda x : x / maxAge)
