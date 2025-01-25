@@ -167,6 +167,11 @@ async def read_user_item(
 ```
 ## 요청 본문(body)
 - Pydantic 라이브러리를 활용하여 요청 본문을 dict로 변환한다
+
+## 라우팅
+- 여러 파일에서 각각 라우트를 정의하고 불러올 수 있다.
+### 
+
 ## 기타
 - FastAPI는 Starlette를 직접 상속하는 클래스이다
 - FastAPI 매개변수 타입 자동 매핑은 Pydantic에 의해 수행된다
