@@ -134,6 +134,40 @@ $\frac{\partial E}{\partial w} = \frac{\partial E}{\partial y} \cdot \frac{\part
 3. 다시 64 → 256으로 늘림
 - 연산은 하지만 계산이 훨씬 줄어듦
 
+#### RNN(Recurrent Neural Network)
+- 순서가 중요한 데이터(문장 등..)을 Dense에 넣으면 순서에 대한 정보가 사라짐을 해결하기 위한 방법
+- 서로 연관이 있거나 순서가 있는 데이터에 유용하다
+##### 적용 예시 : Sequence to Sequence
+- 문장에서 문장을 뽑아내는 방법(ex: 번역)
+```
+한글 문장 -> RNN -> 다차원의 복잡한 행렬(예측) -> RNN -> 영어 문장
+```
+- Sequence를 압축(행렬로 예측하는 놈) : Encoder
+- 행렬을 Sequence로 바꿔주는 놈 : Decoder 
+##### Simple RNN Layer
+- 신경망에 단어를 넣을때 순서대로 하나씩 넣는 방법. 
+- 예측값을 다음 레이어에 전달하여 이전의 값을 다음 예측에 사용한다
+###### 문제점
+- Diminishing Gradient : RNN이 복잡해질 때 뒤로 갈 수록 앞쪽의 예측값의 비중이 적어지는 것. 즉, RNN이 커질경우 input 데이터는 output 데이터에 거의 영향을 안주는 문제가 발생
+##### LSTM(Long Short-Term Memory)
+- 처음 데이터도 RNN 레이어 끝까지 끌고가야해서 나온 레이어
+- 레이어를 통해 예측 결과물로 2개를 내놓는다.
+- 장기기억 단기기억 이라고 생각하면 된다
+- 이전 장기기억에 중요하지 않아 보이는거는 버리고, 중요한거는 이전 장기기억에 추가하는 식으로 작동한다
+```
+#forget gate
+input + 이전 예측 -> sigmoid 
+--> 이전 장기기억에 곱해줌
+```
+```
+#input gate
+input + 이전 예측 -> sigmoid
+            *
+input + 이전 예측 -> tanh
+--> 이전 장기기억에 더해줌 
+```
+##### GRU(Gated Recurrent Unit) 
+- GRU 이전 예측을 좀더 영향력을 크게 준다. 그 외에는 LSTM 비슷
 # 함수, 알고리즘들
 ## Learning Rate Optimizer
 ### Momentum

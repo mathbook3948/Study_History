@@ -1,7 +1,3 @@
-아래와 같이 Node.js 개념을 정리해드릴게요.
-
----
-
 # **Node.js란?**
 - Chrome V8 JavaScript 엔진 위에서 동작하는 **JavaScript 런타임 환경**.
 - JavaScript를 브라우저뿐만 아니라 서버에서도 실행할 수 있도록 해준다.
